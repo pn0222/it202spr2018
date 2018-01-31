@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <title>Tip Calculator</title>
+    </head>
+    <body>
+        <h1>Tip Calculator</h1>
+        <input type="text" placeholder="Input the bill amount" id="billAmount">
+        <input type="range" min="0" max="100" id="tipAmount" class="round" value="20" onchange="updateTextInput(this.value);"><label id="tipPercent">20 %</label>
+        <button id="calculate">Calculate</button>
+        <div id="result"></div>
+        
+        <script>
+            $(function() {
+                $("#calculate").on("click", function() {
+                    var tip = $("#billAmount").val() * ($("#tipAmount").val()/100);
+                    console.log(tip);
+                    $("#result").html("Tip: $" + tip);
+                });
+            });
+            
+            function updateTextInput(val){
+                $("#tipPercent").html(val + " %");
+            }
+        </script>
+    </body>
+</html>
