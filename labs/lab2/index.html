@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
         <meta charset="UTF-8">
         <title>Title of the document</title>
     </head>
@@ -18,6 +19,27 @@
     <body>
         Content of the document......
     </body>
+    
+    
+    
+    <script>
+        var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
+        url += '?' + $.param({
+            'api-key': "b5bf66db065546b78f3d9828fdd19308",
+            'query': "pokemon"
+        });
+        $.ajax({
+            url: url,
+            method: 'GET',
+            }).done(function(result) {
+                console.log(result);
+            }).fail(function(err) {
+                throw err;
+        });
+    </script>
+    
+    
+        
 
 </html> 
 
