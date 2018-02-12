@@ -24,6 +24,7 @@
     
     <script>
         $("#btnSearch").on("click", doSearch);
+        
         function doSearch(){
             
             var input = $("#query").val();
@@ -38,9 +39,24 @@
                 method: 'GET',
                 }).done(function(result) {
                     console.log(result);
+                    loadResponse(result);
                 }).fail(function(err) {
                     throw err;
             });
+        }
+        
+        function loadResponse(response){
+            $("#result").html("");
+            if(response) //Check for null
+            {
+                var n = response.num_results;
+                var results = response.results;
+                for (var i = 0; i < n; i++)
+                {
+                    console.log(results[i]);
+                    $('#result').append(results[i].display_title + "<br>");
+                }
+            }
         }
     </script>
     
