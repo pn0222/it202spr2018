@@ -7,7 +7,7 @@
     
     <body>
         <h2>Weather App</h2>
-        <p>Give me a valid zip code.... otherwise I will give an invalid result</p>
+        <p>Give me a valid "U.S. Zip Code" .... otherwise I will throw exceptions.</p>
         <input id="zipcode" type="text">
         <button id="search">button</button>
         <div id="result"></div>
@@ -25,19 +25,32 @@
     <script>
         $("#search").click(function() {
             var zipCode = $("#zipcode").val();
-            $.get( "https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + zipCode + "')&format=json", function( data ) {
-                console.log(data);
-                if(data.query.count !== 0){
-                    $("#result").html( data.query.results.channel.description );
-                    $("#result").html( data.query.results.channel.description + "<br>" + 
-                    data.query.results.channel.item.condition.temp +  " " + data.query.results.channel.units.temperature + "°<br>" + 
-                    data.query.results.channel.item.condition.text +
-                    "<br><b><i>Last updated: </b></i>" + data.query.results.channel.lastBuildDate );
-                }
-                else{
-                    $( "#result").html("Invalid location")
-                }
-            });
+            if (zipCode.length >= 5 && zipCode.length <= 9 && !isNaN(zipCode)){
+                console.log("Valid zip code");
+                
+                $.get( "https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + zipCode + "')&format=json", function( data ) {
+                    console.log(data);
+                    if(data.query.count !== 0){
+                        
+                        if(data.query.results.channel.location.country === "United States"){
+                            $("#result").html( data.query.results.channel.description );
+                            $("#result").html( data.query.results.channel.description + "<br>" + 
+                            data.query.results.channel.item.condition.temp +  " " + data.query.results.channel.units.temperature + "°<br>" + 
+                            data.query.results.channel.item.condition.text +
+                            "<br><b><i>Last updated: </b></i>" + data.query.results.channel.lastBuildDate );
+                        }
+                        else{
+                            $( "#result").html("Location is not within the \"United States\"")
+                        }
+                    }
+                    else{
+                        $( "#result").html("Cannot find the location.")
+                    }
+                });
+            }
+            else{
+                $( "#result").html("Invalid input has been given.")
+            }
         })
     </script>
 
