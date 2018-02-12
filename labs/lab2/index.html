@@ -7,35 +7,37 @@
         <title>Title of the document</title>
     </head>
     
-    <div id="home"></div>
     
-    <div id="search">
-        <input id="query" type="text">
-        <button id="btnSearch">Search</button>
-    </div>
-    
-    <div id="result"></div>
     
     <body>
-        Content of the document......
+        <div id="home"></div>
+        
+        <div id="search">
+            <input id="query" type="text">
+            <button id="btnSearch">Search</button>
+        </div>
+        
+        <div id="result"></div>
     </body>
     
     
     
     <script>
-        var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
-        url += '?' + $.param({
-            'api-key': "b5bf66db065546b78f3d9828fdd19308",
-            'query': "pokemon"
-        });
-        $.ajax({
-            url: url,
-            method: 'GET',
-            }).done(function(result) {
-                console.log(result);
-            }).fail(function(err) {
-                throw err;
-        });
+        function doSearch(){
+            var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
+            url += '?' + $.param({
+                            'api-key': "b5bf66db065546b78f3d9828fdd19308",
+                            'query': "pokemon"
+                        });
+            $.ajax({
+                url: url,
+                method: 'GET',
+                }).done(function(result) {
+                    console.log(result);
+                }).fail(function(err) {
+                    throw err;
+            });
+        }
     </script>
     
     
