@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Activity 13</title>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="200" height="200"></canvas>
+        <script>
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(25, 100);
+            ctx.lineTo(25, 0);
+            ctx.lineTo(50, 0);
+            ctx.lineTo(75, 25);
+            ctx.lineTo(50, 50);
+            ctx.lineTo(25, 50);
+            ctx.moveTo(100, 100);
+            ctx.lineTo(100, 0);
+            ctx.lineTo(150, 100);
+            ctx.lineTo(150, 0);
+            ctx.stroke();
+        </script>
+    </body>
+</html>
