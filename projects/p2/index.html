@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        #splash{
+            display: none;
+        }
+        #search{
+            display: none;
+        }
+        #map{
+            display: none;
+            height: 90%;
+        }
+        #resetBtn{
+            display: none;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <head>
+        <meta charset="UTF-8">
+        <title>CPS Locator</title>
+    </head>
+    
+    <body class="container">
+        <div id="splash">
+            <h1>Welcome!</h1>
+            <p>Looking for school properties? Click to continue...</p>
+            <button id="startBtn" class="btn btn-success">Continue</button>
+        </div>
+        <div id="search">
+            <h1>Please select school type</h1>
+            <div id="schoolList"></div>
+            <button id="searchBtn" class="btn btn-success">Search</button>
+        </div>
+        <div id="map"><button id="resetSearch" class="btn btn-success">Search Again</button></div>
+        <button id="resetBtn" class="btn btn-success">Search Again</button>
+    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!--<script src="locator.js"></script>-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    
+    <script>
+        var map;
+        var markerList = [];
+        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+        var icons = {
+            "Career academy": {
+                icon: iconBase + 'police.png'
+            },
+            "Charter": {
+                icon: iconBase + 'dollar.png'
+            },
+            "Citywide-Option": {
+                icon: iconBase + 'target.png'
+            },
+            "Classical": {
+                icon: iconBase + 'movies.png'
+            },
+            "Contract": {
+                icon: iconBase + 'flag.png'
+            },
+            "Magnet": {
+                icon: iconBase + 'ruler.png'
+            },
+            "Military academy": {
+                icon: iconBase + 'cabs.png'
+            },
+            "Neighborhood": {
+                icon: iconBase + 'hiker.png'
+            },
+            "Regional gifted center": {
+                icon: iconBase + 'volcano.png'
+            },
+            "Selective enrollment": {
+                icon: iconBase + 'schools.png'
+            },
+            "Small": {
+                icon: iconBase + 'poi.png'
+            },
+            "Special Education": {
+                icon: iconBase + 'earthquake.png'
+            },
+            
+        };
+        function initMap() {
+            var chicago = {lat: 41.8781, lng: -87.6298};
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: chicago
+            });
+        }
+        
+        function displayMarker(data){
+            console.log(data);
+            var latitude = parseFloat(data.school_latitude);
+            var longitude = parseFloat(data.school_longitude);
+            var coordinates = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+            console.log(coordinates);
+            
+            console.log(latitude + " : " + longitude)
+            var marker = new google.maps.Marker({
+                position: coordinates,
+                map: map,
+                icon: icons[data.school_type].icon,
+                title: data.long_name
+            });
+            var infowindow = new google.maps.InfoWindow({
+              content: data.address
+            });
+            
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+            
+            markerList.push(marker);
+        }
+        
+        $(document).ready(function(){
+        $("#splash").show();
+        $("#startBtn").on("click", toStart);
+        $("#searchBtn").on("click", toSearch);
+        $("#resetBtn").on("click", toReset);
+        
+        function toStart(){
+            $("#splash").hide();
+            $("#search").show();
+            
+            
+            $.ajax({
+                url: "https://data.cityofchicago.org/resource/76dk-7ieb.json?$select=school_type&$group=school_type",
+                method: 'GET',
+                }).done(function(result) {
+                    //Load into list
+                    loadType(result);
+                }).fail(function(err) {
+                    throw err;
+                }
+            );
+        }
+        
+        function toSearch(){
+            $("#search").hide();
+            $("#map").show();
+            $("#resetBtn").show();
+            var marked = $("input[name='schoolList']").serializeArray();
+            var result = "(";
+            var n = marked.length;
+            for(var i = 0; i < n; i++){
+                if(i === 0)
+                    result += "'" + marked[i].value + "'";
+                else
+                    result += ",'" + marked[i].value + "'";
+            }
+            result += ")"
+            // console.log(result);
+            if(n !== 0){
+                $.ajax({
+                    url: "https://data.cityofchicago.org/resource/76dk-7ieb.json?$where=school_type IN "+ result,
+                    method: 'GET',
+                    }).done(function(result) {
+                        // console.log(result);
+                        loadMap(result);
+                    }).fail(function(err) {
+                        throw err;
+                    }
+                )
+            }
+        }
+        
+        function toReset(){
+            var n = markerList.length;
+            for(var i = 0; i < n; i++){
+                markerList[i].setMap(null);
+            }
+            $("#search").show();
+            $("#resetBtn").hide();
+            $("#map").hide();
+            $("input:checkbox").prop('checked', false); 
+        }
+        
+        function loadMap(json){
+            var n = json.length;
+            for(var i = 0; i < n; i++){
+                displayMarker(json[i]);
+            }
+        }
+
+        function loadType(json){
+            var n = json.length;
+            for(var i = 0; i < n; i++)
+            {
+                // console.log(json[i].school_type);
+                $("#schoolList").append("<div><input type=\"checkbox\" id=\"" + i + "\" name=\"schoolList\" value=\"" + json[i].school_type + "\">" + json[i].school_type + "</div>")
+            }
+        }
+    });
+    </script>
+    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmIJ6Zfj9lMEWDkoDsbEJOzkjtcXcvaBY&callback=initMap">
+    </script>
+
+</html>

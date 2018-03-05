@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    
+    
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+
+      // This example displays a marker at the center of Australia.
+      // When the user clicks the marker, an info window opens.
+
+      function initMap() {
+        var chicago = {lat: 41.8781, lng: -87.6298};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: chicago
+        });
+
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+          position: chicago,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        
+        
+        $.ajax({
+            url: "https://data.cityofchicago.org/api/views/xpdx-8ivx/rows.json",
+            success:function(result){
+                console.log(result);
+                console.log("length = " + result.data.length)
+                
+                var data = result.data;
+                var n = data.length;
+                
+                for(var i = 0; i < n; i++){
+                    
+                    
+                    var position = {lat: parseFloat(data[i][23]), lng: parseFloat(data[i][24])};
+                    console.log(position);
+                    
+                    var marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: data[i][12]
+                    });
+                    var text = data[i][16];
+                    var infowindow = new google.maps.InfoWindow({
+                      content: text
+                    });
+                    
+                    marker.addListener('click', function() {
+                        infowindow.open(map, marker);
+                    });
+                    
+                }
+            }
+        })
+      }
+    </script>
+    <script>
+    </script>
+    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaP8PpB0yOrpICdHslSahjfxuGgYjy3P4&callback=initMap">
+    </script>
+  </body>
+</html>
