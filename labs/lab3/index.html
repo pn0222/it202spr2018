@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+   
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="600"></canvas>
+    <script>
+      var c=document.getElementById("myCanvas");
+      var ctx=c.getContext("2d");
+      
+      var game = {lives: 1, score: 0, level: 1};
+      var player = {x: 75, y:110 , color: "blue", radius: 25};     
+      var harm = {x: c.width, y:Math.random() * 500 + 15 , color: "red", radius: 25};
+      var benefit = {x: c.width, y:Math.random() * 500 + 15  , color: "green", radius: 25};
+      
+      var isPaused = false;
+      var isGameOver = false;
+      
+      
+      
+      
+      function draw() {
+        ctx.clearRect(0,0,c.width,c.height);
+        
+        var bg = new Image(400,600);
+        bg.src = "img/layout.jpg";
+        ctx.drawImage(bg, 0, 0);
+        
+        game.score++;
+        
+        //Adjust level
+        game.level = parseInt(1 + game.score/5000);
+        
+        // draw harm
+        harm.x = harm.x - 1*game.level;
+        benefit.x--;
+        
+        if (harm.x <= 0) {
+          harm.x = c.width;
+          harm.y = harm.y = (Math.random() * (585 - 2*harm.radius)) + 15;
+        }
+        if (benefit.x <= 0) {
+          benefit.x = c.width;
+          benefit.y = (Math.random() * (585 - 2*benefit.radius)) + 15;
+        }
+        
+        // draw player
+        ctx.fillStyle = player.color;
+        ctx.beginPath();
+        // ctx.arc(player.x,player.y,player.radius,0,2*Math.PI);
+        var playerImg = new Image(10,10);
+        playerImg.src = 'img/player.png';
+        ctx.drawImage(playerImg, player.x,player.y, player.radius*2, player.radius*2);
+        ctx.fill();
+        
+        
+        
+        ctx.fillStyle = benefit.color;
+        ctx.beginPath();
+        // ctx.arc(benefit.x,benefit.y,benefit.radius,0,2*Math.PI);
+        var benefitImg = new Image(10,10);
+        benefitImg.src = 'img/benefit.png';
+        ctx.drawImage(benefitImg, benefit.x,benefit.y, benefit.radius*2, benefit.radius*2);
+        ctx.fill();
+        
+        ctx.fillStyle = harm.color;
+        ctx.beginPath();
+        // ctx.arc(harm.x,harm.y,harm.radius,0,2*Math.PI);
+        var harmImg = new Image(10,10);
+        harmImg.src = 'img/harm.png';
+        ctx.drawImage(harmImg, harm.x,harm.y, harm.radius*2, harm.radius*2);
+        ctx.fill();
+        
+        // collision check, using code from 
+        //   https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+        
+        // var dx = player.x + player.radius - harm.x - harm.radius;
+        var dx = harm.x + harm.radius - player.x - player.radius;
+        var dy = player.y + player.radius - harm.y - harm.radius;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+        
+        
+        var bdx = benefit.x + benefit.radius - player.x - player.radius;
+        var bdy = player.y + player.radius - benefit.y - benefit.radius;
+        var bdistance = Math.sqrt(bdx * bdx + bdy * bdy);
+        
+        // if (distance < player.radius + harm.radius) {
+        if((dx < (player.radius + harm.radius)) && (Math.abs(dy) < player.radius + benefit.radius ) ){
+            // collision detected!
+            console.log("collision");
+            
+            harm.x = c.width;   // reposition harm 
+            harm.y = (Math.random() * (585 - 2*benefit.radius)) + 15;
+            
+            if(game.lives > 0){
+                game.lives--;       // reduce lives
+            }
+            
+            else if(game.lives == 0){
+                isGameOver = true;
+                ctx.clearRect(0,0,c.width,c.height);
+                
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0,400,600);
+                ctx.fillStyle = "red";
+                ctx.font = "30px Arial";
+                ctx.fillText("GAME OVER" ,100,200);
+            }
+            
+            
+            
+            console.log(game);
+        }
+        // else if (bdistance < player.radius + benefit.radius) {
+        
+        if((bdx < (player.radius + harm.radius)) && (Math.abs(bdy) < player.radius + benefit.radius ) ){
+            // ponits gained!
+            console.log("level up!");
+            
+            benefit.x = c.width;   // reposition harm 
+            // game.lives++;       // gain lives
+            game.score += 1000;
+            benefit.y = (Math.random() * (585 - 2*benefit.radius)) + 15;
+            
+            
+            console.log(game);
+        }
+      
+        
+        
+        
+        
+        
+        
+        // TODO:  draw score and lives
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,600,15);
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("Lives: " + game.lives ,5,13);
+        ctx.fillText("Score: " + game.score ,300,13);
+        ctx.fillText("Level  " + game.level ,140,13);
+        
+          
+            
+      
+      
+      
+      if(!isPaused && !isGameOver){
+        requestAnimationFrame(draw);
+      }
+      }
+      
+      
+      
+      
+      draw();
+
+      // TODO:  keyboard events to change player y coordinate
+    //   function moveY(){
+        $(document).keydown(function(e){
+            if (e.keyCode == 38) { 
+                if(player.y > 15){
+                    console.log("Up arrow key has been pressed.")
+                    player.y = player.y - 5;
+                }
+            }
+            else if (e.keyCode == 40) { 
+                if(player.y < (600 - 2*player.radius)){
+                    console.log("Down arrow key has been pressed.")
+                    player.y = player.y + 5;
+                }
+            }
+            else if (e.keyCode == 32){
+                if (isPaused)
+                {
+                    isPaused = false;
+                    console.log("Resume.");
+                    requestAnimationFrame(draw);
+                }
+                else if(!isPaused){
+                    isPaused = true;
+                    console.log("Paused.");
+                }
+                
+            }
+        });
+      
+
+
+
+
+    </script>
+    
+  </body>
+  
+</html>
