@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Cache API</title>
+    </head>
+    
+    <body>
+        <img src="img/react.gif">
+    </body>
+    
+    <script>
+        caches.open('test-cache').then(function(cache){
+            cache.addAll(["/", "img/react.gif"])
+            .then(function(){
+                // Cached!
+            });
+            cache.keys().then(function(cacheKeys){
+                console.log(cacheKeys);
+            });
+        });
+    </script>
+
+</html>
