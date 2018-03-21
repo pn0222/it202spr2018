@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Test 2</title>
+    </head>
+    
+    <body>
+        <ol id="list"></ol>
+    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    <script>
+        $.get("https://data.cityofchicago.org/resource/tt4n-kn4t.json?$where=full_or_part_time%20=%20%22P%22%20AND%20department%20=%20%22CITY%20COUNCIL%22", function(response) {
+            console.log(response);
+            console.log(response.length);
+            var n = response.length;
+            // console.log(n);
+            for(var i = 0; i < n; i++){
+                        $("#list").append("<li>" + response[i].name + " " + response[i].annual_salary + " " + response[i].job_titles + "</li>")
+            }
+
+        
+        });
+    </script>
+
+</html>
