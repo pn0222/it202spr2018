@@ -1,0 +1,66 @@
+body{
+   background-color: #222222;
+}
+
+#about{
+    position: absolute;
+    text-align: center;
+    color: white;
+    position: fixed; 
+    top: -50%; 
+    left: -50%; 
+    width: 200%; 
+    height: 200%;
+}
+
+#about img{
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    margin: auto; 
+    min-width: 45%;
+    min-height: 50%;
+}
+
+#about img u{
+    color:#6C0000;
+}
+
+.home-title{
+    font-family: "Orbitron";
+    font-size:80px;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.home-about{
+    font-family: "Orbitron";
+    font-size:16px;
+}
+
+.home-title-it{
+    color:#6C0000;
+}
+
+.title-button{
+    position: absolute;
+    top: 74%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color:#000000 !important;
+}
+
+.period{
+    color:#6C0000;
+    font-size:40px;
+    font-weight: bold;
+}
+
+.underlined{
+    text-decoration: underline;
+    text-decoration-color: #6C0000;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>StockIT</title>
+        
+        <link rel="stylesheet" href="node_modules/material-components-web/dist/material-components-web.css">
+        <link href="css/stockit.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        
+        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+        
+    </head>
+
+    
+    <body class="mdc-typography">
+        <div id="home">
+            <div id="about" class="toggle-down">
+                <img src="image/suit.jpg">
+                <div class="home-title">
+                    <div class="underlined">Stock<b class="home-title-it">IT</b></div>
+                    <div class="home-about">Complex algorithm <span class="period">.</span> Customize watchlist <span class="period">.</span> Organized data <span class="period">.</span> Easy to use</div>
+                </div>
+                <button class="mdc-button mdc-button--raised title-button" id="homebtn">
+                    <i class="material-icons">file_upload</i>
+                </button>
+            </div>
+            <div id="login">
+                
+            </div>
+        </div>
+        <div id="search">This is the search screen.</div>
+        <div id="stock">This is the stock screen.</div>
+    </body>
+    <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
+    <script>mdc.autoInit()</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="javascript/stockit.js"></script>
+</html>
