@@ -7,8 +7,58 @@
         <link rel="stylesheet" href="node_modules/material-components-web/dist/material-components-web.css">
         <link href="css/stockit.css" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        
         <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['line']});
+            google.charts.setOnLoadCallback(drawChart);
+            
+            function drawChart() {
+                
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'time');
+                data.addColumn('number', 'Guardians of the Galaxy');
+                
+                data.addRows([
+                [1,  37.8],
+                [2,  30.9],
+                [3,  25.4],
+                [4,  11.7],
+                [5,  11.9],
+                [6,   8.8],
+                [7,   7.6],
+                [8,  12.3],
+                [9,  16.9],
+                [10, 12.8],
+                [11,  5.3],
+                [12,  6.6],
+                [13,  4.8],
+                [14,  4.2]
+                ]);
+                
+                var options = {
+                    chart: {
+                        title: 'Box Office Earnings in First Two Weeks of Opening',
+                        subtitle: 'in millions of dollars (USD)'
+                    },
+                    width: 2000,
+                    height: 2000,
+                    axes: {
+                        x: {
+                            0: {side: 'center'}
+                        },
+                        y: {
+                            0: {side: 'center'}
+                        }
+                    }
+                };
+                
+                var chart = new google.charts.Line(document.getElementById('chart'));
+                
+                chart.draw(data, google.charts.Line.convertOptions(options));
+            }
+        </script>
     </head>
     
     
@@ -21,7 +71,20 @@
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
                     <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
                 </section>
+                <section>
+                    <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                        
+                        <input type="text" id="search_field" style="color:white" class="mdc-text-field__input mdc-theme--secondary-bg">
+                        <label class="mdc-floating-label" style="color:#6C0000" for="search_field">Search</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    
+                        <i id="searchbtn" class="material-icons" style="color:#6C0000">search</i>
+                
+                </section>
             </div>
+            
+            
         </header>
         
         <div id="home">
@@ -84,8 +147,17 @@
                 </div>
             </div>
         </div>
-        <div id="search">This is the search screen.</div>
-        <div id="stock">This is the stock screen.</div>
+        <div id="search">
+            <div class="searchtitle">Watchlist</div>
+            <ul class="mdc-list">
+                <li class="mdc-list-item" style="color:white">Single-line item</li>
+                
+            </ul>
+            
+        </div>
+        <div id="stock">
+            <div id="chart"></div>
+        </div>
     </body>
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
     <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
