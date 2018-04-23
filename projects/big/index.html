@@ -9,11 +9,21 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         
         <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
-        
     </head>
+    
+    
 
     
     <body class="mdc-typography">
+        
+        <header class="mdc-top-app-bar stockit-navbar">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+                </section>
+            </div>
+        </header>
+        
         <div id="home">
             <div id="about" class="toggle-down">
                 <img src="image/suit.jpg">
@@ -24,14 +34,60 @@
                 <button class="mdc-button mdc-button--raised title-button" id="homebtn">
                     <i class="material-icons">file_upload</i>
                 </button>
-            </div>
-            <div id="login">
                 
+            </div>
+            
+            <div id="login">
+                <img src="image/suit.jpg">
+                
+                 
+                
+                <div class="login-field">
+                    <div id="alert"></div>
+                    
+                    <div class="mdc-text-field mdc-theme--primary-bg" data-mdc-auto-init="MDCTextField">
+                        <input type="text" id="user_field" class="mdc-text-field__input">
+                        <label class="mdc-floating-label" for="user_field">Username</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <hr>
+                    
+                    <div class="mdc-text-field mdc-themetext-primary-on-dark mdc-theme--primary-bg" data-mdc-auto-init="MDCTextField">
+                        <input type="password" id="password_field" class="mdc-text-field__input" required minlength=8>
+                        <label for="password_field" class="mdc-floating-label">Password</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    
+                    
+                    <hr>
+                    
+                    <button id="loginbtn" class="mdc-button loginbtn mdc-button--raised">
+                        <i class="material-icons">wifi</i>
+                        <b>Login</b>
+                    </button>
+                    
+                    <button id="signupbtn" class="mdc-button loginbtn mdc-button--raised" style="display:none">
+                        <i class="material-icons">wifi</i>
+                        <b>Sign Up</b>
+                    </button>
+                        
+                        
+                    <!--<div class="mdc-text-field  --mdc-theme-text-primary-on-dark" data-mdc-auto-init="MDCTextField">-->
+                    <!--    <input type="text" id="my-text-field" class="mdc-text-field__input mdc-theme--primary-bg">-->
+                    <!--    <label class="mdc-floating-label" for="my-text-field">Username</label>-->
+                    <!--    <div class="mdc-line-ripple"></div>-->
+                    <!--</div>-->
+                    
+                    <div id="signup_field" class="sign-field" style="width:100%">Create a new account? <a class="signupbtn">Sign up.</a></div>
+                    <div id="login_field" class="sign-field" style="width:100%">Already have an account? <a class="signupbtn">Log in.</a></div>
+        
+                </div>
             </div>
         </div>
         <div id="search">This is the search screen.</div>
         <div id="stock">This is the stock screen.</div>
     </body>
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
     <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
     <script>mdc.autoInit()</script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

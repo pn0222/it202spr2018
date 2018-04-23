@@ -9,6 +9,7 @@
   "author": "Paul Nguyen",
   "license": "MIT",
   "dependencies": {
-    "material-components-web": "^0.34.1"
+    "material-components-web": "^0.34.1",
+    "sass": "^1.2.1"
   }
 }
