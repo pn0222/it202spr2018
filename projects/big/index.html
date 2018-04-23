@@ -9,56 +9,6 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['line']});
-            google.charts.setOnLoadCallback(drawChart);
-            
-            function drawChart() {
-                
-                var data = new google.visualization.DataTable();
-                data.addColumn('number', 'time');
-                data.addColumn('number', 'Guardians of the Galaxy');
-                
-                data.addRows([
-                [1,  37.8],
-                [2,  30.9],
-                [3,  25.4],
-                [4,  11.7],
-                [5,  11.9],
-                [6,   8.8],
-                [7,   7.6],
-                [8,  12.3],
-                [9,  16.9],
-                [10, 12.8],
-                [11,  5.3],
-                [12,  6.6],
-                [13,  4.8],
-                [14,  4.2]
-                ]);
-                
-                var options = {
-                    chart: {
-                        title: 'Box Office Earnings in First Two Weeks of Opening',
-                        subtitle: 'in millions of dollars (USD)'
-                    },
-                    width: 2000,
-                    height: 2000,
-                    axes: {
-                        x: {
-                            0: {side: 'center'}
-                        },
-                        y: {
-                            0: {side: 'center'}
-                        }
-                    }
-                };
-                
-                var chart = new google.charts.Line(document.getElementById('chart'));
-                
-                chart.draw(data, google.charts.Line.convertOptions(options));
-            }
-        </script>
     </head>
     
     
@@ -164,4 +114,17 @@
     <script>mdc.autoInit()</script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="javascript/stockit.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </html>
