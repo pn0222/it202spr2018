@@ -24,81 +24,81 @@ $(document).ready(function(){
         $.ajax({
             url: url,
             dataType: 'json',
-        }).done(function(resp){
-            console.log(resp);
-            var length = 0;
-            for(var x in resp){
-                console.log(x);
-                length++;
-            }
-            
-            
-            var data = new google.visualization.DataTable();
-            // for(var x in resp["Time Series (1min)"]){
-            //     for(var y in x)
-            //         console.log(y);
-            // }
-            // console.log(resp["Time Series (1min)"])
-            
-            var priceData = []
-            
-            if(length > 1){
-                data.addColumn('number', 'price');
-                data.addColumn('number', stock.toUpperCase());
-                var stockInfo = resp["Time Series (1min)"];
-                var count = 0;
-                for (var x in stockInfo){
-                    // console.log(x);
-                    // console.log(stockInfo[x])
-                    for(var y in stockInfo[x]){
-                        // console.log(y);
-                        // console.log(stockInfo[x][y]);
-                        count++;
-                        console.log(stockInfo[x]["2. high"])
-                        var price = stockInfo[x]["2. high"].parseFloat;
-                        
-                        data.addRow([count, price])
-                        priceData.push([count, price]);
-                        
-                    }
+            success: function(resp) {
+                console.log(resp);
+                var length = 0;
+                for(var x in resp){
+                    console.log(x);
+                    length++;
                 }
-            
-                $("#search").hide();
-                $("#stock").show();
-                var options = {
-                    chart: {
-                        title: stock.toUpperCase(),
-                    },
-                    width: 2000,
-                    height: 2000,
-                    axes: {
-                        x: {
-                            0: {side: 'top'}
-                        },
-                        y: {
-                            0: {side: 'left'}
-                        }
-                    }
-                };
-                console.log(priceData);
-                data.addRows(priceData);
-                var chart = new google.charts.Line(document.getElementById('chart'));
-                
-                chart.draw(data, google.charts.Line.convertOptions(options));
-                //Show data on the current stock.
-                
-                
+    
+                if(length > 1){
+                    $("#search").hide();
+                    $("#stock").show();
+                }
+                loadChart(resp["Time Series (1min)"], stock);
             }
-            
-        });
+        })
+        // .done(function(resp){
+        //     console.log(resp);
+        //     var length = 0;
+        //     for(var x in resp){
+        //         console.log(x);
+        //         length++;
+        //     }
+
+        //     if(length > 1){
+        //         $("#search").hide();
+        //         $("#stock").show();
+        //     }
+        //     loadChart(resp["Time Series (1min)"], stock);
+        // })
     });
 
     
 });
 
-window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
-var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
-var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+function loadChart(stockInfo, stock){
+    console.log(stockInfo);
+            
+    var data = new google.visualization.DataTable();
+
+    data.addColumn('number', 'price');
+    data.addColumn('number', stock.toUpperCase());;
+    var count = 0;
+    for (var x in stockInfo){
+        for(var y in stockInfo[x]){
+            count++;
+            console.log(stockInfo[x]["2. high"])
+            var price = stockInfo[x]["2. high"].parseFloat;
+            
+            data.addRow([count, price])
+        }
+    }
+    
+    var options = {
+        chart: {
+            title: stock.toUpperCase(),
+        },
+        width: 2000,
+        height: 2000,
+        axes: {
+            x: {
+                0: {side: 'top'}
+            },
+            y: {
+                0: {side: 'left'}
+            }
+        }
+    };
+
+    
+    var chart = new google.charts.Line(document.getElementById('chart'));
+    
+    chart.draw(data, google.charts.Line.convertOptions(options));
+    //Show data on the current stock.
+    
+}
 
 var userDB= initDB();
 var stockDB = initStockDB();
