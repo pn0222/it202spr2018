@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Project 5</title>
+    </head>
+    
+    <body>
+        <video id="player" controls autoplay></video>
+        <button id="capture">Capture</button>
+        <canvas id="canvas" width=320 height=240></canvas>
+        
+        
+    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        //https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY
+        var vision = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyA70SViUQp3uyc4qKv2-IvXpPHnyubsHjk";
+    
+        const player = document.getElementById('player');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const captureButton = document.getElementById('capture');
+        
+        const constraints = {
+            video: true,
+        };
+        
+        captureButton.addEventListener('click', () => {
+            // Draw the video frame to the canvas.
+            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+        });
+        
+        // Attach the video stream to the video element and autoplay.
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+            player.srcObject = stream;
+        });
+        
+        var requestBody = JSON.stringify({
+            "requests": [{
+                "features": [{
+                    "type": "FACE_DETECTION"
+                }],
+                "image": {
+                    "content":canvas.toDataURL().split(",")[1]
+                }
+            }]
+        })
+        
+        // function requestData(){
+            $.ajax({
+                type: "POST",
+                url: vision,
+                data: requestBody
+            }).done(function (data){
+                console.log(data);
+            });
+        // }
+    </script>
+</html>
