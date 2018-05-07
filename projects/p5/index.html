@@ -9,7 +9,9 @@
         <video id="player" controls autoplay></video>
         <button id="capture">Capture</button>
         <canvas id="canvas" width=320 height=240></canvas>
-        <div id = "data">hello</div>
+        <canvas id="frameCanvas" width=320 height=240></canvas>
+        <canvas id="faceCanvas"></canvas>
+        <div id="imageData" ></div>
         
         
     </body>
@@ -18,11 +20,16 @@
     <script>
         //https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY
         var vision = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyA70SViUQp3uyc4qKv2-IvXpPHnyubsHjk";
-    
+        const supported = 'mediaDevices' in navigator;
         const player = document.getElementById('player');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
         const captureButton = document.getElementById('capture');
+        
+        const faceCanvas = document.getElementById('faceCanvas');
+        const faceContext = faceCanvas.getContext('2d');
+        const dataDiv = document.getElementById('imageData');
+        var requestBody, nextX = 0, nextY = 0;
         
         const constraints = {
             video: true,
@@ -31,7 +38,7 @@
         captureButton.addEventListener('click', () => {
             // Draw the video frame to the canvas.
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
-            requestData();
+            getImageData('FACE_DETECTION');
         });
         
         // Attach the video stream to the video element and autoplay.
@@ -40,27 +47,81 @@
             player.srcObject = stream;
         });
         
-        var requestBody = JSON.stringify({
-            "requests": [{
-                "features": [{
-                    "type": "FACE_DETECTION"
-                }],
-                "image": {
-                    "content":canvas.toDataURL().split(",")[1]
+        function getImageData(type) {
+            // capture the video frame to the hidden canvas
+            frameContext.drawImage(player, 0, 0, frameCanvas.width, frameCanvas.height);
+            
+            frameCanvas.toDataURL().split(",")[1]
+             
+             // create the request body
+                requestBody = {
+                    "requests":[{
+                        "image":{
+                            "content":canvas.toDataURL().split(",")[1]
+                        },
+                        "features":[{
+                            "type": type,
+                            "maxResults":10
+                        }]
+                    }]
+                };
+            
+            // send the data to Google Cloud Vision
+            $.ajax({
+                method: "POST",
+                contentType: "application/json",
+                url: vision,
+                data: JSON.stringify(requestBody)
+            })
+            .done(function(response) {
+                console.log(response);
+                
+                // get object with face coordinates as determined by GCV
+                
+                // TODO - handle "no face" condition
+                var faceVertices = response.responses[0].faceAnnotations[0].boundingPoly.vertices;
+                console.log(faceVertices);
+                
+                // find corners
+                var topLeft = faceVertices[0];
+                var bottomRight = faceVertices[2];
+                console.log(bottomRight, bottomRight.x, topLeft, topLeft.x);
+                
+                // determine width and height for cropping
+                var faceWidth = bottomRight.x - topLeft.x;
+                var faceHeight = bottomRight.y - topLeft.y;
+                var sourceX = topLeft.x;
+                var sourceY = topLeft.y;
+                var destWidth = faceWidth;
+                var destHeight = faceHeight;
+                
+                
+                // check to see whether we need to start a new row or column
+                if (nextX > collageCanvas.width) {
+                    nextX = 0;
+                    nextY += faceHeight;
                 }
                 
-            }]
-        })
-        
-        function requestData(){
-            $.ajax({
-                type: "POST",
-                url: vision,
-                data: requestBody
-            }).done(function (data){
-                console.log(data);
-                $("#data").text(data);
+                if (nextY + faceHeight > collageCanvas.height) {
+                // make the collage taller as needed
+                //   but resizing clears it, so we need to
+                //   save and redraw the data
+                
+                var imgData=faceContext.getImageData(0,0,faceCanvas.width, faceCanvas.height);
+                
+                    faceCanvas.height += faceHeight;
+                    faceContext.putImageData(imgData,0,0);
+                }                  
+                
+                faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, nextX, nextY, faceWidth, faceHeight); 
+                
+                nextX += faceWidth;
+                
+                
             });
+        
         }
+
+
     </script>
 </html>
