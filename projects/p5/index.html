@@ -9,7 +9,6 @@
         <video id="player" controls autoplay></video>
         <button id="capture">Capture</button>
         <canvas id="canvas" width=320 height=240></canvas>
-        <canvas id="frameCanvas" width=320 height=240></canvas>
         <canvas id="faceCanvas"></canvas>
         <div id="imageData" ></div>
         
@@ -49,9 +48,9 @@
         
         function getImageData(type) {
             // capture the video frame to the hidden canvas
-            frameContext.drawImage(player, 0, 0, frameCanvas.width, frameCanvas.height);
+            context.drawImage(player, 0, 0, canvas.width, canvas.height);
             
-            frameCanvas.toDataURL().split(",")[1]
+            canvas.toDataURL().split(",")[1]
              
              // create the request body
                 requestBody = {
@@ -97,12 +96,12 @@
                 
                 
                 // check to see whether we need to start a new row or column
-                if (nextX > collageCanvas.width) {
+                if (nextX > faceCanvas.width) {
                     nextX = 0;
                     nextY += faceHeight;
                 }
                 
-                if (nextY + faceHeight > collageCanvas.height) {
+                if (nextY + faceHeight > faceCanvas.height) {
                 // make the collage taller as needed
                 //   but resizing clears it, so we need to
                 //   save and redraw the data
