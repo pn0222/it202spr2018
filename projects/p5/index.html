@@ -37,6 +37,7 @@
         navigator.mediaDevices.getUserMedia(constraints)
         .then((stream) => {
             player.srcObject = stream;
+            requestData();
         });
         
         var requestBody = JSON.stringify({
@@ -50,7 +51,7 @@
             }]
         })
         
-        // function requestData(){
+        function requestData(){
             $.ajax({
                 type: "POST",
                 url: vision,
@@ -59,6 +60,6 @@
                 console.log(data);
                 $("data").text(data);
             });
-        // }
+        }
     </script>
 </html>
