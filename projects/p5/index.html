@@ -58,6 +58,8 @@
         
         function getImageData(type) {
             // capture the video frame to the hidden canvas
+            
+            context.clearRect(0,0,faceCanvas.width, faceCanvas.height);
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
             
             canvas.toDataURL().split(",")[1]
@@ -116,7 +118,6 @@
                
                     //Clear data to determine if face is found
                     faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
-                    context.clearRect(0,0,faceCanvas.width, faceCanvas.height);
                     
                     faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
                     
