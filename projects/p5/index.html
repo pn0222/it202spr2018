@@ -89,27 +89,12 @@
                 
                 if(type == "LABEL_DETECTION"){
                     if (response.responses[0].labelAnnotations != null){
-                        $("#alertLabel").text(response.responses[0].labelAnnotations[0].description);
-                        var labelVertices = response.responses[0].labelAnnotations[0].boundingPoly.vertices;
-                        var topLeft = labelVertices[0];
-                        var bottomRight = labelVertices[2];
-                        console.log(bottomRight, bottomRight.x, topLeft, topLeft.x);
+                        // $("#alertLabel").text(response.responses[0].labelAnnotations[0].description);
                         
-                        // determine width and height for cropping
-                        var labelWidth = bottomRight.x - topLeft.x;
-                        var labelHeight = bottomRight.y - topLeft.y;
-                        var sourceX = topLeft.x;
-                        var sourceY = topLeft.y;
-                        var destWidth = labelWidth;
-                        var destHeight = labelHeight;
-                        
-                        labelContext.clearRect(0,0,labelCanvas.width, labelCanvas.height);
-                        labelContext.drawImage(canvas, sourceX, sourceY, labelWidth, labelHeight, 0, 0, labelWidth, labelHeight); 
+                        for(var x in response.responses[0].labelAnnotations){
+                            $("#alertLabel").append(" " + x.description);
+                        }
                     }
-                    else{
-                        $("#alertLabel").text("Label not found");
-                    }
-                    
                 }
                 
                 // TODO - handle "no face" condition
@@ -129,7 +114,10 @@
                     var destWidth = faceWidth;
                     var destHeight = faceHeight;
                
+                    //Clear data to determine if face is found
                     faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
+                    context.clearRect(0,0,faceCanvas.width, faceCanvas.height);
+                    
                     faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
                     
                     $("#alertFace").text("Face found");
