@@ -10,8 +10,10 @@
         <button id="capture">Capture</button>
         <canvas id="canvas" width=320 height=240></canvas>
         <canvas id="faceCanvas"></canvas>
+        <canvas id="labelCanvas"></canvas>
         <div id="imageData" ></div>
-        <div id="alert"></div>
+        <div id="alertLabel"></div>
+        <div id="alertFace"></div>
         
         
     </body>
@@ -32,6 +34,10 @@
         const faceContext = faceCanvas.getContext('2d');
         const dataDiv = document.getElementById('imageData');
         var requestBody;
+        
+        
+        const labelCanvas = document.getElementById('labelCanvas');
+        const labelContext = faceCanvas.getContext('2d');
         
         const constraints = {
             video: true,
@@ -83,10 +89,25 @@
                 
                 if(type == "LABEL_DETECTION"){
                     if (response.responses[0].labelAnnotations != null){
-                        $("#alert").text(response.responses[0].labelAnnotations[0].description);
+                        $("#alertLabel").text(response.responses[0].labelAnnotations[0].description);
+                        var labelVertices = response.responses[0].labelAnnotations[0].boundingPoly.vertices;
+                        var topLeft = labelVertices[0];
+                        var bottomRight = labelVertices[2];
+                        console.log(bottomRight, bottomRight.x, topLeft, topLeft.x);
+                        
+                        // determine width and height for cropping
+                        var labelWidth = bottomRight.x - topLeft.x;
+                        var labelHeight = bottomRight.y - topLeft.y;
+                        var sourceX = topLeft.x;
+                        var sourceY = topLeft.y;
+                        var destWidth = labelWidth;
+                        var destHeight = labelHeight;
+                        
+                        labelContext.clearRect(0,0,labelCanvas.width, labelCanvas.height);
+                        labelContext.drawImage(canvas, sourceX, sourceY, labelWidth, labelHeight, 0, 0, labelWidth, labelHeight); 
                     }
                     else{
-                        $("#alert").text("Label not found");
+                        $("#alertLabel").text("Label not found");
                     }
                     
                 }
@@ -111,10 +132,10 @@
                     faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
                     faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
                     
-                    $("#alert").text("Face found");
+                    $("#alertFace").text("Face found");
                 }
                 else{
-                    $("#alert").text("No face found");   
+                    $("#alertFace").text("No face found");   
                 }
                 
             });
