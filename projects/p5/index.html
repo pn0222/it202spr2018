@@ -17,6 +17,8 @@
     
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
+    
+        $("#canvas").hide();
         //https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY
         var vision = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyA70SViUQp3uyc4qKv2-IvXpPHnyubsHjk";
         const supported = 'mediaDevices' in navigator;
@@ -36,8 +38,9 @@
         
         captureButton.addEventListener('click', () => {
             // Draw the video frame to the canvas.
-            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+            // context.drawImage(player, 0, 0, canvas.width, canvas.height);
             getImageData('FACE_DETECTION');
+            getImageData('LABEL_DETECTION');
         });
         
         // Attach the video stream to the video element and autoplay.
