@@ -59,7 +59,7 @@
         function getImageData(type) {
             // capture the video frame to the hidden canvas
             
-            context.clearRect(0,0,faceCanvas.width, faceCanvas.height);
+            context.clearRect(0,0,canvas.width, canvas.height);
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
             
             canvas.toDataURL().split(",")[1]
@@ -94,7 +94,7 @@
                         // $("#alertLabel").text(response.responses[0].labelAnnotations[0].description);
                         
                         for(var x in response.responses[0].labelAnnotations){
-                            $("#alertLabel").append(" " + x.description);
+                            $("#alertLabel").append(" " + x.description.value());
                         }
                     }
                 }
