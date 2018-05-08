@@ -123,7 +123,8 @@
                         $("#alertFace").text("Face found");
                     }
                     else{
-                        $("#alertFace").text("No face found");   
+                        $("#alertFace").text("No face found");
+                        faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height); 
                     }
                 }
                 
