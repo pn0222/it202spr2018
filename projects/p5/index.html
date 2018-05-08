@@ -97,34 +97,37 @@
                         $("#alertLabel").text("No label found");
                     }
                 }
+                else if(type == "FACE_DETECTION"){
+                    // TODO - handle "no face" condition
+                    if (response.responses[0].faceAnnotations != null){
+                        // find corners
+                        var faceVertices = response.responses[0].faceAnnotations[0].boundingPoly.vertices;
+                        console.log(faceVertices);
+                        var topLeft = faceVertices[0];
+                        var bottomRight = faceVertices[2];
+                        console.log(bottomRight, bottomRight.x, topLeft, topLeft.x);
+                        
+                        // determine width and height for cropping
+                        var faceWidth = bottomRight.x - topLeft.x;
+                        var faceHeight = bottomRight.y - topLeft.y;
+                        var sourceX = topLeft.x;
+                        var sourceY = topLeft.y;
+                        var destWidth = faceWidth;
+                        var destHeight = faceHeight;
+                   
+                        //Clear data to determine if face is found
+                        faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
+                        
+                        faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
+                        
+                        $("#alertFace").text("Face found");
+                    }
+                    else{
+                        $("#alertFace").text("No face found");   
+                    }
+                }
                 
-                // TODO - handle "no face" condition
-                if (response.responses[0].faceAnnotations != null){
-                    // find corners
-                    var faceVertices = response.responses[0].faceAnnotations[0].boundingPoly.vertices;
-                    console.log(faceVertices);
-                    var topLeft = faceVertices[0];
-                    var bottomRight = faceVertices[2];
-                    console.log(bottomRight, bottomRight.x, topLeft, topLeft.x);
-                    
-                    // determine width and height for cropping
-                    var faceWidth = bottomRight.x - topLeft.x;
-                    var faceHeight = bottomRight.y - topLeft.y;
-                    var sourceX = topLeft.x;
-                    var sourceY = topLeft.y;
-                    var destWidth = faceWidth;
-                    var destHeight = faceHeight;
-               
-                    //Clear data to determine if face is found
-                    faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
-                    
-                    faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
-                    
-                    $("#alertFace").text("Face found");
-                }
-                else{
-                    $("#alertFace").text("No face found");   
-                }
+                
                 
             });
         
