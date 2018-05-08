@@ -31,7 +31,7 @@
         const faceCanvas = document.getElementById('faceCanvas');
         const faceContext = faceCanvas.getContext('2d');
         const dataDiv = document.getElementById('imageData');
-        var requestBody;//, nextX = 0, nextY = 0;
+        var requestBody;
         
         const constraints = {
             video: true,
@@ -81,11 +81,20 @@
                 
                 // get object with face coordinates as determined by GCV
                 
+                if(type == "LABEL_DETECTION"){
+                    if (response.responses[0].labelAnnotations != null){
+                        $("#alert").text(response.responses[0].labelAnnotations[0].description);
+                    }
+                    else{
+                        $("#alert").text("Label not found");
+                    }
+                    
+                }
+                
                 // TODO - handle "no face" condition
                 var faceVertices = response.responses[0].faceAnnotations[0].boundingPoly.vertices;
                 console.log(faceVertices);
-                if(faceVertices){
-                    
+                if (response.responses[0].faceAnnotations != null){
                     // find corners
                     var topLeft = faceVertices[0];
                     var bottomRight = faceVertices[2];
@@ -98,28 +107,11 @@
                     var sourceY = topLeft.y;
                     var destWidth = faceWidth;
                     var destHeight = faceHeight;
-                    
-                    
-                    // check to see whether we need to start a new row or column
-                    // if (nextX > faceCanvas.width) {
-                    //     nextX = 0;
-                    //     nextY += faceHeight;
-                    // }
-                    
-                    // if (nextY + faceHeight > faceCanvas.height) {
-                    // // make the collage taller as needed
-                    // //   but resizing clears it, so we need to
-                    // //   save and redraw the data
-                    
-                    // var imgData=faceContext.getImageData(0,0,faceCanvas.width, faceCanvas.height);
-                    
-                    //     faceCanvas.height += faceHeight;
-                    //     faceContext.putImageData(imgData,0,0);
-                    // }                  
-                    
+               
+                    faceContext.clearRect(0,0,faceCanvas.width, faceCanvas.height);
                     faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
                     
-                    // nextX += faceWidth;
+                    $("#alert").text("Face found");
                 }
                 else{
                     $("#alert").text("No face found");   
