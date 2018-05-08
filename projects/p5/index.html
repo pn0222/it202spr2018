@@ -94,7 +94,7 @@
                         // $("#alertLabel").text(response.responses[0].labelAnnotations[0].description);
                         
                         for(var x in response.responses[0].labelAnnotations){
-                            $("#alertLabel").append(" " + x.description.value());
+                            $("#alertLabel").append(<b>x.description</b>);
                         }
                     }
                 }
