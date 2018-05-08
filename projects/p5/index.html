@@ -11,6 +11,7 @@
         <canvas id="canvas" width=320 height=240></canvas>
         <canvas id="faceCanvas"></canvas>
         <div id="imageData" ></div>
+        <div id="alert"></div>
         
         
     </body>
@@ -118,7 +119,10 @@
                     
                     faceContext.drawImage(canvas, sourceX, sourceY, faceWidth, faceHeight, 0, 0, faceWidth, faceHeight); 
                     
-                    nextX += faceWidth;
+                    // nextX += faceWidth;
+                }
+                else{
+                    $("#alert").text("No face found");   
                 }
                 
             });
